@@ -1,0 +1,30 @@
+name: Autograding
+
+# Roda a cada push (e manualmente). Corrige a conformidade da API (comportamento).
+on:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  autograding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar dependências
+        run: npm install --no-audit --no-fund
+
+      - name: Subir o servidor
+        run: |
+          PORT=3000 npm start &
+          sleep 2
+
+      - name: Corrigir (autograder de conformidade)
+        run: BASE_URL=http://localhost:3000 node autograder/check.mjs
