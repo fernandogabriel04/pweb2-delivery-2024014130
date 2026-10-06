@@ -1,12 +1,6 @@
 // Regras de negócio de Entregas.
 import { BusinessRuleError, ConflictError, NotFoundError, ValidationError } from '../utils/errors.js';
-
-export const STATUS = Object.freeze({
-  CRIADA: 'CRIADA',
-  EM_TRANSITO: 'EM_TRANSITO',
-  ENTREGUE: 'ENTREGUE',
-  CANCELADA: 'CANCELADA',
-});
+import { STATUS_ENTREGA as STATUS, STATUS_MOTORISTA } from '../utils/status.js';
 
 // cada status só pode avançar para o próximo.
 const PROXIMO_STATUS = {
@@ -24,9 +18,13 @@ function textoPreenchido(valor) {
 }
 
 export class EntregasService {
-  /** @param {import('../repositories/contracts.js').IEntregasRepository} repository */
-  constructor(repository) {
+  /**
+   * @param {import('../repositories/contracts.js').IEntregasRepository} repository
+   * @param {import('../repositories/contracts.js').IMotoristasRepository} motoristasRepository
+   */
+  constructor(repository, motoristasRepository) {
     this.repository = repository;
+    this.motoristasRepository = motoristasRepository;
   }
 
   criar({ descricao, origem, destino } = {}) {
@@ -107,6 +105,29 @@ export class EntregasService {
       ...entrega,
       status: STATUS.CANCELADA,
       historico: [...entrega.historico, evento(`Entrega cancelada (status anterior: ${entrega.status})`)],
+    });
+  }
+
+  atribuir(id, motoristaId) {
+    if (!Number.isInteger(motoristaId)) {
+      throw new ValidationError('motoristaId é obrigatório e deve ser um número inteiro');
+    }
+
+    const entrega = this.buscarPorId(id);
+    const motorista = this.motoristasRepository.buscarPorId(motoristaId);
+    if (!motorista) throw new NotFoundError('motorista não encontrado');
+
+    if (entrega.status !== STATUS.CRIADA) {
+      throw new BusinessRuleError(`só é possível atribuir motorista a entrega criada (status atual: ${entrega.status})`);
+    }
+    if (motorista.status !== STATUS_MOTORISTA.ATIVO) {
+      throw new BusinessRuleError(`motorista ${motorista.status} não pode receber entregas`);
+    }
+
+    return this.repository.atualizar(id, {
+      ...entrega,
+      motoristaId,
+      historico: [...entrega.historico, evento(`Motorista ${motorista.nome} (id ${motorista.id}) atribuído`)],
     });
   }
 
