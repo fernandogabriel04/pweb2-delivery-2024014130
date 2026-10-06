@@ -52,4 +52,12 @@ export class EntregasController {
       next(err);
     }
   };
+
+  atribuir = (req, res, next) => {
+    try {
+      res.json(this.service.atribuir(Number(req.params.id), req.body.motoristaId));
+    } catch (err) {
+      next(err);
+    }
+  };
 }

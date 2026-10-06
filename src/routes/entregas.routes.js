@@ -10,6 +10,7 @@ export function criarRotasEntregas(controller) {
   router.patch('/:id/avancar', controller.avancar);
   router.patch('/:id/cancelar', controller.cancelar);
   router.get('/:id/historico', controller.historico);
+  router.patch('/:id/atribuir', controller.atribuir);
 
   return router;
 }
