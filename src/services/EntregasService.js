@@ -24,7 +24,7 @@ function textoPreenchido(valor) {
 }
 
 export class EntregasService {
-  /** @param {import('../repositories/EntregasRepository.js').EntregasRepository} repository */
+  /** @param {import('../repositories/contracts.js').IEntregasRepository} repository */
   constructor(repository) {
     this.repository = repository;
   }
@@ -42,9 +42,16 @@ export class EntregasService {
       throw new ValidationError('origem e destino devem ser diferentes');
     }
 
+    // O contrato só filtra por status/motoristaId; comparar os demais campos é regra do Service.
     const duplicada = this.repository
-      .listar({ descricao, origem, destino })
-      .some((e) => !STATUS_FINAIS.includes(e.status));
+      .listarTodos()
+      .some(
+        (e) =>
+          e.descricao === descricao &&
+          e.origem === origem &&
+          e.destino === destino &&
+          !STATUS_FINAIS.includes(e.status),
+      );
     if (duplicada) {
       throw new ConflictError('já existe uma entrega ativa com a mesma descricao, origem e destino');
     }
@@ -60,12 +67,12 @@ export class EntregasService {
   }
 
   listar({ status } = {}) {
-    if (status === undefined) return this.repository.listar();
+    if (status === undefined) return this.repository.listarTodos();
 
     if (!Object.values(STATUS).includes(status)) {
       throw new ValidationError(`status inválido: ${status}`);
     }
-    return this.repository.listar({ status });
+    return this.repository.listarTodos({ status });
   }
 
   buscarPorId(id) {
@@ -83,6 +90,7 @@ export class EntregasService {
     }
 
     return this.repository.atualizar(id, {
+      ...entrega,
       status: novoStatus,
       historico: [...entrega.historico, evento(`Status alterado de ${entrega.status} para ${novoStatus}`)],
     });
@@ -96,6 +104,7 @@ export class EntregasService {
     }
 
     return this.repository.atualizar(id, {
+      ...entrega,
       status: STATUS.CANCELADA,
       historico: [...entrega.historico, evento(`Entrega cancelada (status anterior: ${entrega.status})`)],
     });
