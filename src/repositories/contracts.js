@@ -1,6 +1,14 @@
 // Contratos dos repositories (RF-04).
 // Os services dependem APENAS destes contratos, nunca da implementação concreta:
 // qualquer objeto com estes métodos (ex.: um Mock) pode ser injetado no lugar.
+// Os métodos podem ser síncronos (memória) ou devolver Promise (Prisma): os
+// services sempre usam `await`, então as duas formas cumprem o contrato.
+
+/**
+ * Valor direto ou Promise desse valor.
+ * @template T
+ * @typedef {T | Promise<T>} Talvez
+ */
 
 /**
  * @typedef {Object} Evento
@@ -34,17 +42,17 @@
  *
  * @typedef {Object} IEntregasRepository
  *
- * @property {(filtros?: FiltrosEntrega) => Entrega[]} listarTodos
+ * @property {(filtros?: FiltrosEntrega) => Talvez<Entrega[]>} listarTodos
  *   Lista as entregas. Os filtros informados são combinados (E lógico);
  *   sem filtros, retorna todas.
  *
- * @property {(id: number) => Entrega | null} buscarPorId
+ * @property {(id: number) => Talvez<Entrega | null>} buscarPorId
  *   Retorna a entrega com o id informado, ou `null` se não existir.
  *
- * @property {(dados: Omit<Entrega, 'id'>) => Entrega} criar
+ * @property {(dados: Omit<Entrega, 'id'>) => Talvez<Entrega>} criar
  *   Persiste uma nova entrega e retorna o registro com o `id` gerado.
  *
- * @property {(id: number, dados: Partial<Entrega>) => Entrega} atualizar
+ * @property {(id: number, dados: Partial<Entrega>) => Talvez<Entrega>} atualizar
  *   Atualiza os campos informados da entrega e retorna o registro atualizado.
  */
 
@@ -66,16 +74,16 @@
  *
  * @typedef {Object} IMotoristasRepository
  *
- * @property {() => Motorista[]} listarTodos
+ * @property {() => Talvez<Motorista[]>} listarTodos
  *   Lista todos os motoristas.
  *
- * @property {(id: number) => Motorista | null} buscarPorId
+ * @property {(id: number) => Talvez<Motorista | null>} buscarPorId
  *   Retorna o motorista com o id informado, ou `null` se não existir.
  *
- * @property {(cpf: string) => Motorista | null} buscarPorCpf
+ * @property {(cpf: string) => Talvez<Motorista | null>} buscarPorCpf
  *   Retorna o motorista com o CPF informado, ou `null` se não existir.
  *
- * @property {(dados: Omit<Motorista, 'id'>) => Motorista} criar
+ * @property {(dados: Omit<Motorista, 'id'>) => Talvez<Motorista>} criar
  *   Persiste um novo motorista e retorna o registro com o `id` gerado.
  */
 

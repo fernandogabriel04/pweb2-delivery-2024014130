@@ -27,7 +27,7 @@ export class EntregasService {
     this.motoristasRepository = motoristasRepository;
   }
 
-  criar({ descricao, origem, destino } = {}) {
+  async criar({ descricao, origem, destino } = {}) {
     if (![descricao, origem, destino].every(textoPreenchido)) {
       throw new ValidationError('descricao, origem e destino são obrigatórios');
     }
@@ -41,15 +41,14 @@ export class EntregasService {
     }
 
     // O contrato só filtra por status/motoristaId; comparar os demais campos é regra do Service.
-    const duplicada = this.repository
-      .listarTodos()
-      .some(
-        (e) =>
-          e.descricao === descricao &&
-          e.origem === origem &&
-          e.destino === destino &&
-          !STATUS_FINAIS.includes(e.status),
-      );
+    const entregas = await this.repository.listarTodos();
+    const duplicada = entregas.some(
+      (e) =>
+        e.descricao === descricao &&
+        e.origem === origem &&
+        e.destino === destino &&
+        !STATUS_FINAIS.includes(e.status),
+    );
     if (duplicada) {
       throw new ConflictError('já existe uma entrega ativa com a mesma descricao, origem e destino');
     }
@@ -64,7 +63,7 @@ export class EntregasService {
     });
   }
 
-  listar({ status } = {}) {
+  async listar({ status } = {}) {
     if (status === undefined) return this.repository.listarTodos();
 
     if (!Object.values(STATUS).includes(status)) {
@@ -73,14 +72,14 @@ export class EntregasService {
     return this.repository.listarTodos({ status });
   }
 
-  buscarPorId(id) {
-    const entrega = this.repository.buscarPorId(id);
+  async buscarPorId(id) {
+    const entrega = await this.repository.buscarPorId(id);
     if (!entrega) throw new NotFoundError('entrega não encontrada');
     return entrega;
   }
 
-  avancar(id) {
-    const entrega = this.buscarPorId(id);
+  async avancar(id) {
+    const entrega = await this.buscarPorId(id);
     const novoStatus = PROXIMO_STATUS[entrega.status];
 
     if (!novoStatus) {
@@ -94,8 +93,8 @@ export class EntregasService {
     });
   }
 
-  cancelar(id) {
-    const entrega = this.buscarPorId(id);
+  async cancelar(id) {
+    const entrega = await this.buscarPorId(id);
 
     if (STATUS_FINAIS.includes(entrega.status)) {
       throw new BusinessRuleError(`não é possível cancelar uma entrega com status ${entrega.status}`);
@@ -108,13 +107,13 @@ export class EntregasService {
     });
   }
 
-  atribuir(id, motoristaId) {
+  async atribuir(id, motoristaId) {
     if (!Number.isInteger(motoristaId)) {
       throw new ValidationError('motoristaId é obrigatório e deve ser um número inteiro');
     }
 
-    const entrega = this.buscarPorId(id);
-    const motorista = this.motoristasRepository.buscarPorId(motoristaId);
+    const entrega = await this.buscarPorId(id);
+    const motorista = await this.motoristasRepository.buscarPorId(motoristaId);
     if (!motorista) throw new NotFoundError('motorista não encontrado');
 
     if (entrega.status !== STATUS.CRIADA) {
@@ -131,7 +130,8 @@ export class EntregasService {
     });
   }
 
-  historico(id) {
-    return this.buscarPorId(id).historico;
+  async historico(id) {
+    const entrega = await this.buscarPorId(id);
+    return entrega.historico;
   }
 }

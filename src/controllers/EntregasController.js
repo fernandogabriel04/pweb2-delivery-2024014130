@@ -4,58 +4,58 @@ export class EntregasController {
     this.service = service;
   }
 
-  criar = (req, res, next) => {
+  criar = async (req, res, next) => {
     try {
-      const entrega = this.service.criar(req.body);
+      const entrega = await this.service.criar(req.body);
       res.status(201).json(entrega);
     } catch (err) {
       next(err);
     }
   };
 
-  listar = (req, res, next) => {
+  listar = async (req, res, next) => {
     try {
-      res.json(this.service.listar({ status: req.query.status }));
+      res.json(await this.service.listar({ status: req.query.status }));
     } catch (err) {
       next(err);
     }
   };
 
-  buscarPorId = (req, res, next) => {
+  buscarPorId = async (req, res, next) => {
     try {
-      res.json(this.service.buscarPorId(Number(req.params.id)));
+      res.json(await this.service.buscarPorId(Number(req.params.id)));
     } catch (err) {
       next(err);
     }
   };
 
-  avancar = (req, res, next) => {
+  avancar = async (req, res, next) => {
     try {
-      res.json(this.service.avancar(Number(req.params.id)));
+      res.json(await this.service.avancar(Number(req.params.id)));
     } catch (err) {
       next(err);
     }
   };
 
-  cancelar = (req, res, next) => {
+  cancelar = async (req, res, next) => {
     try {
-      res.json(this.service.cancelar(Number(req.params.id)));
+      res.json(await this.service.cancelar(Number(req.params.id)));
     } catch (err) {
       next(err);
     }
   };
 
-  historico = (req, res, next) => {
+  historico = async (req, res, next) => {
     try {
-      res.json(this.service.historico(Number(req.params.id)));
+      res.json(await this.service.historico(Number(req.params.id)));
     } catch (err) {
       next(err);
     }
   };
 
-  atribuir = (req, res, next) => {
+  atribuir = async (req, res, next) => {
     try {
-      res.json(this.service.atribuir(Number(req.params.id), req.body.motoristaId));
+      res.json(await this.service.atribuir(Number(req.params.id), req.body.motoristaId));
     } catch (err) {
       next(err);
     }

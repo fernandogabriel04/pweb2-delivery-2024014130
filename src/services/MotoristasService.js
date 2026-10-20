@@ -16,7 +16,7 @@ export class MotoristasService {
     this.entregasRepository = entregasRepository;
   }
 
-  criar({ nome, cpf, placaVeiculo } = {}) {
+  async criar({ nome, cpf, placaVeiculo } = {}) {
     if (!textoPreenchido(nome) || !textoPreenchido(cpf)) {
       throw new ValidationError('nome e cpf são obrigatórios');
     }
@@ -25,7 +25,7 @@ export class MotoristasService {
     }
 
     cpf = cpf.trim();
-    if (this.repository.buscarPorCpf(cpf)) {
+    if (await this.repository.buscarPorCpf(cpf)) {
       throw new ConflictError(`já existe um motorista cadastrado com o CPF ${cpf}`);
     }
 
@@ -37,19 +37,19 @@ export class MotoristasService {
     });
   }
 
-  listar() {
+  async listar() {
     return this.repository.listarTodos();
   }
 
-  buscarPorId(id) {
-    const motorista = this.repository.buscarPorId(id);
+  async buscarPorId(id) {
+    const motorista = await this.repository.buscarPorId(id);
     if (!motorista) throw new NotFoundError('motorista não encontrado');
     return motorista;
   }
 
   // Entregas do motorista, com filtro opcional de status combinado.
-  listarEntregas(id, { status } = {}) {
-    this.buscarPorId(id);
+  async listarEntregas(id, { status } = {}) {
+    await this.buscarPorId(id);
 
     if (status !== undefined && !Object.values(STATUS_ENTREGA).includes(status)) {
       throw new ValidationError(`status inválido: ${status}`);
