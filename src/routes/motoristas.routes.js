@@ -1,12 +1,14 @@
 import { Router } from 'express';
+import { validarMotorista } from '../middlewares/validacao.js';
 
+// Rotas web de Motoristas com SSR.
 export function criarRotasMotoristas(controller) {
   const router = Router();
 
-  router.post('/', controller.criar);
   router.get('/', controller.listar);
-  router.get('/:id', controller.buscarPorId);
-  router.get('/:id/entregas', controller.listarEntregas);
+  router.get('/novo', controller.novo);
+  router.post('/', validarMotorista, controller.criar);
+  router.get('/:id', controller.detalhe);
 
   return router;
 }

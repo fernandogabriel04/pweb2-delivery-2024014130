@@ -30,7 +30,6 @@ app.set('layout', 'layouts/base');
 
 app.use(express.static(path.join(raiz, 'public')));
 app.use(express.urlencoded({ extended: false })); // corpo dos <form>
-app.use(express.json());
 
 // <form method="POST" action="...?_method=PATCH"> vira PATCH.
 app.use(methodOverride('_method'));

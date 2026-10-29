@@ -20,6 +20,6 @@ export function criarRotas() {
 
   const router = Router();
   router.use('/entregas', criarRotasEntregas(entregasController));
-  router.use('/api/motoristas', criarRotasMotoristas(motoristasController));
+  router.use('/motoristas', criarRotasMotoristas(motoristasController));
   return router;
 }

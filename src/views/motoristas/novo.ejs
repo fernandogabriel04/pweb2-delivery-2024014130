@@ -1,0 +1,31 @@
+<a href="/motoristas" class="voltar">← Voltar para motoristas</a>
+<h1>Novo Motorista</h1>
+
+<section class="cartao">
+  <%- include('../partials/erros-form', { erros }) %>
+
+  <form method="POST" action="/motoristas" class="formulario" novalidate>
+    <label class="<%= campos.nome ? 'campo-erro' : '' %>">
+      Nome
+      <input type="text" name="nome" value="<%= dados.nome ?? '' %>" maxlength="120" required>
+      <% if (campos.nome) { %><span class="erro-campo"><%= campos.nome %></span><% } %>
+    </label>
+
+    <label class="<%= campos.cpf ? 'campo-erro' : '' %>">
+      CPF
+      <input type="text" name="cpf" value="<%= dados.cpf ?? '' %>" maxlength="20" placeholder="000.000.000-00" required>
+      <% if (campos.cpf) { %><span class="erro-campo"><%= campos.cpf %></span><% } %>
+    </label>
+
+    <label class="<%= campos.placaVeiculo ? 'campo-erro' : '' %>">
+      Placa do veículo (opcional)
+      <input type="text" name="placaVeiculo" value="<%= dados.placaVeiculo ?? '' %>" maxlength="10" placeholder="ABC1D23">
+      <% if (campos.placaVeiculo) { %><span class="erro-campo"><%= campos.placaVeiculo %></span><% } %>
+    </label>
+
+    <div class="acoes">
+      <button type="submit">Cadastrar motorista</button>
+      <a href="/motoristas" class="botao botao-secundario">Cancelar</a>
+    </div>
+  </form>
+</section>

@@ -33,3 +33,14 @@ export const validarEntrega = [
   textoObrigatorio('destino', 'o destino'),
   reexibirSeInvalido('entregas/nova', 'Nova Entrega'),
 ];
+
+export const validarMotorista = [
+  textoObrigatorio('nome', 'o nome'),
+  textoObrigatorio('cpf', 'o CPF', 20),
+  body('placaVeiculo')
+    .optional({ values: 'falsy' }) // campo vazio = sem placa
+    .trim()
+    .isLength({ max: 10 })
+    .withMessage('O campo placaVeiculo deve ter no máximo 10 caracteres.'),
+  reexibirSeInvalido('motoristas/novo', 'Novo Motorista'),
+];
