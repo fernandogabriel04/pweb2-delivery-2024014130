@@ -1,0 +1,31 @@
+<a href="/entregas" class="voltar">← Voltar para entregas</a>
+<h1>Nova Entrega</h1>
+
+<section class="cartao">
+  <%- include('../partials/erros-form', { erros }) %>
+
+  <form method="POST" action="/entregas" class="formulario" novalidate>
+    <label class="<%= campos.descricao ? 'campo-erro' : '' %>">
+      Descrição
+      <input type="text" name="descricao" value="<%= dados.descricao ?? '' %>" maxlength="200" required>
+      <% if (campos.descricao) { %><span class="erro-campo"><%= campos.descricao %></span><% } %>
+    </label>
+
+    <label class="<%= campos.origem ? 'campo-erro' : '' %>">
+      Origem
+      <input type="text" name="origem" value="<%= dados.origem ?? '' %>" maxlength="120" required>
+      <% if (campos.origem) { %><span class="erro-campo"><%= campos.origem %></span><% } %>
+    </label>
+
+    <label class="<%= campos.destino ? 'campo-erro' : '' %>">
+      Destino
+      <input type="text" name="destino" value="<%= dados.destino ?? '' %>" maxlength="120" required>
+      <% if (campos.destino) { %><span class="erro-campo"><%= campos.destino %></span><% } %>
+    </label>
+
+    <div class="acoes">
+      <button type="submit">Criar entrega</button>
+      <a href="/entregas" class="botao botao-secundario">Cancelar</a>
+    </div>
+  </form>
+</section>

@@ -51,8 +51,8 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 app.get('/', (req, res) => res.redirect('/entregas'));
 
-// (Parte 2/3): trocar pela montagem das rotas web.
-app.use('/api', criarRotas());
+// Rotas web (composition root em src/routes).
+app.use(criarRotas());
 
 // 404 e erros renderizam HTML.
 app.use(naoEncontrado);

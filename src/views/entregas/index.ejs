@@ -1,0 +1,47 @@
+<div class="cabecalho">
+  <h1>Entregas</h1>
+  <a href="/entregas/nova" class="botao">Nova Entrega</a>
+</div>
+
+<form method="GET" action="/entregas" class="filtro">
+  <label>
+    Status
+    <select name="status">
+      <option value="">Todos</option>
+      <% opcoesStatus.forEach((opcao) => { %>
+        <option value="<%= opcao %>" <%= opcao === statusSelecionado ? 'selected' : '' %>><%= opcao %></option>
+      <% }) %>
+    </select>
+  </label>
+  <button type="submit" class="botao-secundario">Filtrar</button>
+</form>
+
+<div class="tabela-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Descrição</th>
+        <th>Origem</th>
+        <th>Destino</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (entregas.length === 0) { %>
+        <tr><td colspan="6" class="vazio">Nenhuma entrega encontrada.</td></tr>
+      <% } %>
+      <% entregas.forEach((entrega) => { %>
+        <tr>
+          <td><%= entrega.id %></td>
+          <td><%= entrega.descricao %></td>
+          <td><%= entrega.origem %></td>
+          <td><%= entrega.destino %></td>
+          <td><%- include('../partials/badge', { status: entrega.status }) %></td>
+          <td><a href="/entregas/<%= entrega.id %>">Detalhes</a></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

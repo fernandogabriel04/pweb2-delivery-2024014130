@@ -1,0 +1,64 @@
+<a href="/entregas" class="voltar">← Voltar para entregas</a>
+
+<div class="cabecalho">
+  <h1>Entrega #<%= entrega.id %></h1>
+  <%- include('../partials/badge', { status: entrega.status }) %>
+</div>
+
+<section class="cartao">
+  <dl class="dados">
+    <dt>Descrição</dt><dd><%= entrega.descricao %></dd>
+    <dt>Origem</dt><dd><%= entrega.origem %></dd>
+    <dt>Destino</dt><dd><%= entrega.destino %></dd>
+    <dt>Status</dt><dd><%= entrega.status %></dd>
+    <dt>Motorista</dt>
+    <dd><%= motorista ? `${motorista.nome} (#${motorista.id})` : 'Não atribuído' %></dd>
+  </dl>
+</section>
+
+<%# Os botões só aparecem quando fazem sentido; quem garante a regra é o Service. %>
+<section class="cartao">
+  <h2>Ações</h2>
+  <div class="acoes">
+    <% if (entrega.status === STATUS.CRIADA || entrega.status === STATUS.EM_TRANSITO) { %>
+      <form method="POST" action="/entregas/<%= entrega.id %>/avancar?_method=PATCH">
+        <button type="submit">Avançar status</button>
+      </form>
+    <% } %>
+    <% if (entrega.status !== STATUS.ENTREGUE && entrega.status !== STATUS.CANCELADA) { %>
+      <form method="POST" action="/entregas/<%= entrega.id %>/cancelar?_method=PATCH">
+        <button type="submit" class="botao-perigo">Cancelar entrega</button>
+      </form>
+    <% } else { %>
+      <p>Esta entrega está finalizada (<%= entrega.status %>).</p>
+    <% } %>
+  </div>
+
+  <% if (entrega.status === STATUS.CRIADA) { %>
+    <h2>Atribuir motorista</h2>
+    <form method="POST" action="/entregas/<%= entrega.id %>/atribuir?_method=PATCH" class="acoes">
+      <select name="motoristaId" required>
+        <option value="">Selecione um motorista</option>
+        <% motoristasAtivos.forEach((m) => { %>
+          <option value="<%= m.id %>" <%= m.id === entrega.motoristaId ? 'selected' : '' %>><%= m.nome %> (CPF <%= m.cpf %>)</option>
+        <% }) %>
+      </select>
+      <button type="submit" class="botao-secundario">Atribuir</button>
+    </form>
+    <% if (motoristasAtivos.length === 0) { %>
+      <p>Nenhum motorista ativo. <a href="/motoristas/novo">Cadastre um motorista</a>.</p>
+    <% } %>
+  <% } %>
+</section>
+
+<section class="cartao">
+  <h2>Histórico</h2>
+  <ol class="historico">
+    <% entrega.historico.forEach((evento) => { %>
+      <li>
+        <time datetime="<%= evento.data %>"><%= formatarData(evento.data) %></time>
+        <%= evento.descricao %>
+      </li>
+    <% }) %>
+  </ol>
+</section>

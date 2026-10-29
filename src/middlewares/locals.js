@@ -4,5 +4,7 @@ export function disponibilizarLocals(req, res, next) {
   res.locals.flash = { sucesso: req.flash('sucesso'), erro: req.flash('erro') };
   res.locals.caminho = req.path;
   res.locals.titulo = 'Delivery Tracker';
+  res.locals.formatarData = (iso) =>
+    new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: 'America/Maceio' });
   next();
 }

@@ -1,0 +1,10 @@
+<% if (erros.length) { %>
+  <div class="alerta alerta-erro" role="alert">
+    <strong>Corrija os campos abaixo:</strong>
+    <ul>
+      <% erros.forEach((erro) => { %>
+        <li><%= erro %></li>
+      <% }) %>
+    </ul>
+  </div>
+<% } %>

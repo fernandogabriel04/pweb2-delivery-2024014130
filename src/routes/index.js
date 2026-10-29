@@ -15,11 +15,11 @@ export function criarRotas() {
   const motoristasRepo = new MotoristasPrismaRepository();
   const entregasService = new EntregasService(entregasRepo, motoristasRepo);
   const motoristasService = new MotoristasService(motoristasRepo, entregasRepo);
-  const entregasController = new EntregasController(entregasService);
+  const entregasController = new EntregasController(entregasService, motoristasService);
   const motoristasController = new MotoristasController(motoristasService);
 
   const router = Router();
   router.use('/entregas', criarRotasEntregas(entregasController));
-  router.use('/motoristas', criarRotasMotoristas(motoristasController));
+  router.use('/api/motoristas', criarRotasMotoristas(motoristasController));
   return router;
 }
