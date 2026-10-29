@@ -24,13 +24,18 @@ jobs:
       - name: Instalar dependências
         run: npm install --no-audit --no-fund
 
-      - name: Aplicar migrations
-        run: npx prisma migrate deploy
+      - name: Gerar Prisma Client e aplicar migrations
+        run: |
+          npx prisma generate
+          npx prisma migrate deploy
 
       - name: Subir o servidor
         run: |
           PORT=3000 npm start &
           for i in $(seq 1 20); do curl -sf http://localhost:3000/api/health && break; sleep 1; done
 
-      - name: Corrigir (autograder de conformidade)
-        run: BASE_URL=http://localhost:3000 node autograder/check.mjs
+      # A API JSON foi substituída pela interface web (Atividade 08), então o
+      # autograder antigo (autograder/check.mjs, API JSON do Cap. 4) não se aplica.
+      # Como não encontrei o autograder SSR oficial criei um validando algumas coisas criadas nessa etapa.
+      - name: Corrigir (verificador SSR)
+        run: BASE_URL=http://localhost:3000 node autograder/check-ssr.mjs

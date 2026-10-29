@@ -39,8 +39,11 @@ h2 { font-size: 1.15rem; margin: 24px 0 12px; }
 .cabecalho h1 { margin: 0; }
 .voltar { display: inline-block; margin-bottom: 12px; color: var(--suave); text-decoration: none; }
 
+.cabecalho-titulo { justify-content: flex-start; }
+
 /* Cartões */
 .cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 20px; margin-bottom: 16px; }
+.cartao > h2:first-child { margin-top: 0; }
 
 /* Botões */
 .botao, button {
