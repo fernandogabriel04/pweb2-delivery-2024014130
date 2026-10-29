@@ -1,0 +1,6 @@
+<% flash.sucesso.forEach((mensagem) => { %>
+  <div class="alerta alerta-sucesso" role="status"><%= mensagem %></div>
+<% }) %>
+<% flash.erro.forEach((mensagem) => { %>
+  <div class="alerta alerta-erro" role="alert"><%= mensagem %></div>
+<% }) %>

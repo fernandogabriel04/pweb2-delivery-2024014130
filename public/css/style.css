@@ -1,0 +1,101 @@
+:root {
+  --fundo: #f4f6f8;
+  --cartao: #ffffff;
+  --texto: #1f2933;
+  --suave: #616e7c;
+  --borda: #d9e2ec;
+  --primaria: #1f6f43;
+  --primaria-escura: #17573a;
+  --perigo: #b42318;
+  --raio: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+  line-height: 1.5;
+}
+
+.container { max-width: 960px; margin: 0 auto; padding: 0 16px; }
+main.container { padding-top: 24px; padding-bottom: 48px; }
+
+/* Navbar */
+.navbar { background: var(--primaria); color: #fff; }
+.navbar-conteudo { display: flex; align-items: center; justify-content: space-between; min-height: 56px; gap: 16px; flex-wrap: wrap; }
+.navbar a { color: #fff; text-decoration: none; }
+.marca { font-weight: 700; font-size: 1.1rem; }
+.navbar nav { display: flex; gap: 4px; }
+.navbar nav a { padding: 6px 12px; border-radius: var(--raio); opacity: .85; }
+.navbar nav a:hover, .navbar nav a.ativo { background: rgba(255, 255, 255, .15); opacity: 1; }
+
+/* Títulos e cabeçalhos de página */
+h1 { font-size: 1.6rem; margin: 0 0 16px; }
+h2 { font-size: 1.15rem; margin: 24px 0 12px; }
+.cabecalho { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.cabecalho h1 { margin: 0; }
+.voltar { display: inline-block; margin-bottom: 12px; color: var(--suave); text-decoration: none; }
+
+/* Cartões */
+.cartao { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 20px; margin-bottom: 16px; }
+
+/* Botões */
+.botao, button {
+  display: inline-block; border: 1px solid var(--primaria); background: var(--primaria); color: #fff;
+  padding: 8px 14px; border-radius: var(--raio); font: inherit; cursor: pointer; text-decoration: none;
+}
+.botao:hover, button:hover { background: var(--primaria-escura); }
+.botao-secundario { background: #fff; color: var(--primaria); }
+.botao-secundario:hover { background: #eef5f1; }
+.botao-perigo { background: #fff; color: var(--perigo); border-color: var(--perigo); }
+.botao-perigo:hover { background: #fdecea; }
+
+/* Tabelas */
+.tabela-wrapper { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--borda); }
+th { background: #f0f4f8; font-size: .85rem; text-transform: uppercase; letter-spacing: .03em; color: var(--suave); }
+tr:last-child td { border-bottom: none; }
+.vazio { color: var(--suave); text-align: center; padding: 24px; }
+
+/* Formulários */
+form.formulario { display: grid; gap: 14px; max-width: 520px; }
+label { display: grid; gap: 4px; font-weight: 600; }
+input, select { font: inherit; padding: 8px 10px; border: 1px solid var(--borda); border-radius: var(--raio); background: #fff; }
+input:focus, select:focus { outline: 2px solid var(--primaria); outline-offset: 1px; }
+.campo-erro input { border-color: var(--perigo); }
+.erro-campo { color: var(--perigo); font-size: .9rem; font-weight: 400; }
+.acoes { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.acoes form { margin: 0; }
+.filtro { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; margin-bottom: 16px; }
+
+/* Alertas (flash e erros de validação) */
+.alerta { padding: 12px 14px; border-radius: var(--raio); margin-bottom: 16px; border: 1px solid; }
+.alerta-sucesso { background: #e7f6ec; border-color: #a6d9b8; color: #14532d; }
+.alerta-erro { background: #fdecea; border-color: #f5b5ae; color: #7a1a12; }
+.alerta ul { margin: 0; padding-left: 20px; }
+
+/* Badges de status */
+.badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; letter-spacing: .02em; }
+.badge-CRIADA { background: #e0ecff; color: #1d4ed8; }
+.badge-EM_TRANSITO { background: #fff4d6; color: #92400e; }
+.badge-ENTREGUE { background: #e7f6ec; color: #166534; }
+.badge-CANCELADA { background: #f1f1f1; color: #4b5563; }
+.badge-ATIVO { background: #e7f6ec; color: #166534; }
+.badge-INATIVO { background: #f1f1f1; color: #4b5563; }
+
+/* Detalhe da entrega */
+.dados { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+.dados dt { color: var(--suave); }
+.dados dd { margin: 0; }
+.historico { list-style: none; margin: 0; padding: 0; border-left: 2px solid var(--borda); }
+.historico li { position: relative; padding: 0 0 12px 16px; }
+.historico li::before { content: ""; position: absolute; left: -6px; top: 7px; width: 10px; height: 10px; border-radius: 50%; background: var(--primaria); }
+.historico time { display: block; color: var(--suave); font-size: .85rem; }
+
+/* Página de erro */
+.erro-pagina { text-align: center; padding: 40px 20px; }
+.erro-status { font-size: 3rem; font-weight: 800; color: var(--primaria); margin: 0; }
